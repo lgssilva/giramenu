@@ -8,13 +8,15 @@ type Props = {
   alt: string;
   dimmed?: boolean;
   priority?: boolean;
+  /** Selo pequeno no canto do vídeo (ex.: "Especialidade da casa"). */
+  badge?: string;
 };
 
 /**
  * Mídia 4:5 do prato. Com vídeo: autoplay mudo em loop, só toca quando está
  * visível. Sem vídeo: mostra o poster. A linha fina na base indica o loop.
  */
-export function DishMedia({ videoUrl, posterUrl, alt, dimmed, priority }: Props) {
+export function DishMedia({ videoUrl, posterUrl, alt, dimmed, priority, badge }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
 
@@ -74,6 +76,12 @@ export function DishMedia({ videoUrl, posterUrl, alt, dimmed, priority }: Props)
           fetchPriority={priority ? "high" : "auto"}
         />
       ) : null}
+      {badge && (
+        <span className="absolute left-3 top-3 flex h-7 items-center gap-1.5 rounded-full bg-black/55 px-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-md">
+          <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent-light" />
+          {badge}
+        </span>
+      )}
       {!dimmed && (
         <div className="absolute inset-x-0 bottom-0 h-[1.5px] bg-white/20" aria-hidden>
           <div

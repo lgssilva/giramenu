@@ -22,7 +22,7 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
         const visible = entries.filter((e) => e.isIntersecting);
         if (visible.length) setActive(visible[0].target.id.replace("cat-", ""));
       },
-      { rootMargin: "-160px 0px -60% 0px" },
+      { rootMargin: "-168px 0px -60% 0px" },
     );
     r.categories.forEach((c) => {
       const el = document.getElementById(`cat-${c.id}`);
@@ -40,22 +40,25 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
   const goTo = (id: string) => {
     const el = document.getElementById(`cat-${id}`);
     if (!el) return;
-    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 150, behavior: "smooth" });
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 158, behavior: "smooth" });
   };
 
   return (
     <>
-      <TopBar name={r.name} />
+      <TopBar name={r.name} tagline={r.tagline} />
 
       <main className="flex-1 pb-10">
         {signature && (
           <section className="px-4 pt-4">
             <Link href={`/r/${r.slug}/prato/${signature.id}`} className="block">
-              <DishMedia videoUrl={signature.videoUrl} posterUrl={signature.posterUrl} alt={signature.name} priority />
+              <DishMedia
+                videoUrl={signature.videoUrl}
+                posterUrl={signature.posterUrl}
+                alt={signature.name}
+                badge={t(ui.signature)}
+                priority
+              />
               <div className="flex flex-col gap-1.5 pt-4">
-                <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent-light">
-                  {t(ui.signature)}
-                </span>
                 <div className="flex items-baseline justify-between gap-3">
                   <h1 className="font-serif text-[2rem] font-semibold leading-tight">{signature.name}</h1>
                   <span className="whitespace-nowrap text-xl font-semibold text-accent-light">
@@ -73,7 +76,7 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
 
         <nav
           aria-label={t(ui.categories)}
-          className="sticky top-[calc(4rem+env(safe-area-inset-top))] z-40 mt-6 border-b border-hairline bg-surface/90 py-3.5 backdrop-blur-md"
+          className="sticky top-[calc(4.5rem+env(safe-area-inset-top))] z-40 mt-6 border-b border-hairline bg-surface/90 py-3.5 backdrop-blur-md"
         >
           <div ref={chipsRef} className="no-scrollbar flex gap-2 overflow-x-auto px-4">
             {r.categories.map((c) => {

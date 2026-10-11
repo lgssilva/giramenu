@@ -14,7 +14,7 @@ export function DishDetail({ restaurant: r, dishId }: { restaurant: Restaurant; 
 
   return (
     <>
-      <TopBar name={r.name} backHref={`/r/${r.slug}`} />
+      <TopBar name={r.name} tagline={r.tagline} backHref={`/r/${r.slug}`} />
       <main className="flex-1 pb-12">
         {!d ? (
           <p className="px-4 pt-10 text-on-surface-variant">{t(ui.notFound)}</p>

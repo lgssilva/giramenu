@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { LANG_NAMES, LANGS, ui } from "@/lib/i18n";
 import { useLang } from "./LangProvider";
 
-export function TopBar({ name, backHref }: { name: string; backHref?: string }) {
+export function TopBar({ name, tagline, backHref }: { name: string; tagline?: string; backHref?: string }) {
   const { lang, setLang, t } = useLang();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -21,7 +21,7 @@ export function TopBar({ name, backHref }: { name: string; backHref?: string }) 
 
   return (
     <header className="sticky top-0 z-50 border-b border-hairline bg-surface/85 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
-      <div className="flex h-16 items-center justify-between gap-3 px-4">
+      <div className="flex h-[4.5rem] items-center justify-between gap-3 px-4">
         <div className="flex min-w-0 items-center gap-1">
           {backHref && (
             <Link
@@ -34,7 +34,20 @@ export function TopBar({ name, backHref }: { name: string; backHref?: string }) 
               </svg>
             </Link>
           )}
-          <span className="truncate font-serif text-lg font-medium tracking-wide">{name}</span>
+          <div className="flex min-w-0 items-center gap-2.5">
+            {/* Marca provisória do restaurante; no MVP vem o logo real. */}
+            <svg width="30" height="14" viewBox="0 0 72 18" fill="none" aria-hidden className="shrink-0 text-accent-light">
+              <path d="M1 12c8-8 16-8 24 0s16 8 24 0 14-8 22-2" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+            </svg>
+            <div className="flex min-w-0 flex-col leading-none">
+              <span className="truncate font-serif text-[1.3rem] font-semibold tracking-wide">{name}</span>
+              {tagline && (
+                <span className="pt-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-on-surface-variant">
+                  {tagline}
+                </span>
+              )}
+            </div>
+          </div>
         </div>
 
         <div ref={ref} className="relative">
