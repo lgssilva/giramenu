@@ -16,6 +16,7 @@ type Props = {
  */
 export function DishMedia({ videoUrl, posterUrl, alt, dimmed, priority }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -28,7 +29,21 @@ export function DishMedia({ videoUrl, posterUrl, alt, dimmed, priority }: Props)
       { threshold: 0.4 },
     );
     observer.observe(video);
-    return () => observer.disconnect();
+
+    // A linha de progresso acompanha o tempo real do vídeo.
+    let frame = 0;
+    const tick = () => {
+      if (barRef.current && video.duration) {
+        barRef.current.style.transform = `scaleX(${video.currentTime / video.duration})`;
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
   }, [videoUrl]);
 
   return (
@@ -61,7 +76,10 @@ export function DishMedia({ videoUrl, posterUrl, alt, dimmed, priority }: Props)
       ) : null}
       {!dimmed && (
         <div className="absolute inset-x-0 bottom-0 h-[1.5px] bg-white/20" aria-hidden>
-          <div className="loop-progress h-full bg-accent" />
+          <div
+            ref={barRef}
+            className={`h-full origin-left bg-accent ${videoUrl ? "scale-x-0" : "loop-progress"}`}
+          />
         </div>
       )}
     </div>

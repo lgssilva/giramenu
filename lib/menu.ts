@@ -155,7 +155,8 @@ const tascaDoMar: Restaurant = {
         fr: "Poulpe rôti au feu de bois, pommes de terre écrasées dorées, ail et huile d'olive vierge extra de la Beira Baixa.",
       },
       allergens: ["moluscos"],
-      posterUrl: img.polvo,
+      videoUrl: "/videos/polvo.mp4",
+      posterUrl: "/posters/polvo.jpg",
     },
     {
       id: "bacalhau-gomes-de-sa",
