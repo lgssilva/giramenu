@@ -108,7 +108,7 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
             <h2 className="pb-4 font-serif text-xl font-medium">{t(c.name)}</h2>
             <div className="flex flex-col gap-6">
               {dishesIn(r, c.id).map((d) =>
-                !c.compact && (d.posterUrl || d.videoUrl) ? (
+                !c.compact && !d.soldOut && (d.posterUrl || d.videoUrl) ? (
                   <DishCard key={d.id} dish={d} />
                 ) : (
                   <DishRow key={d.id} dish={d} />
@@ -133,96 +133,38 @@ function SoldOut() {
   );
 }
 
-/**
- * Card do prato. Tocar expande ali mesmo: descrição completa, alergénios e
- * fotos extras. No MVP, esse toque grava o evento dish_open.
- */
+/** Card do prato. Tocar abre o prato em tela cheia (DishSheet). */
 function DishCard({ dish: d }: { dish: Dish }) {
   const { t } = useLang();
   const [open, setOpen] = useState(false);
-  const panelId = `prato-${d.id}`;
 
   return (
-    <article className={`rounded-xl bg-surface-container p-4 ${d.soldOut ? "opacity-70" : ""}`}>
+    <>
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        aria-controls={panelId}
-        className="block w-full text-left"
+        onClick={() => setOpen(true)}
+        className="block w-full rounded-xl bg-surface-container p-4 text-left"
       >
-        <DishMedia videoUrl={d.videoUrl} posterUrl={d.posterUrl} alt={d.name} dimmed={d.soldOut} />
+        <DishMedia videoUrl={d.videoUrl} posterUrl={d.posterUrl} alt={d.name} />
         <div className="flex flex-col gap-1.5 pt-3">
           <div className="flex items-baseline justify-between gap-3">
-            <h3 className={`font-serif text-[1.625rem] font-semibold leading-tight ${d.soldOut ? "text-on-surface-variant" : ""}`}>
-              {d.name}
-            </h3>
+            <h3 className="font-serif text-[1.625rem] font-semibold leading-tight">{d.name}</h3>
             <span className="whitespace-nowrap text-xl font-semibold">{formatPrice(d.price)}</span>
           </div>
-          {d.soldOut && (
-            <div>
-              <SoldOut />
-            </div>
-          )}
-          {!open && <p className="text-sm leading-snug text-on-surface-variant">{t(d.short)}</p>}
+          <p className="text-sm leading-snug text-on-surface-variant">{t(d.short)}</p>
+          <div className="pt-0.5">
+            <AllergenChips allergens={d.allergens} />
+          </div>
+          <span className="flex h-11 items-center justify-center gap-1.5 pt-1 text-[13px] font-semibold text-accent-light">
+            {t(ui.more)}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </span>
         </div>
       </button>
-
-      <div
-        id={panelId}
-        className={`grid transition-[grid-template-rows] duration-300 ease-out ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
-      >
-        <div className="overflow-hidden">
-          <p className="pt-1.5 text-[15px] leading-relaxed text-on-surface-variant">{t(d.description)}</p>
-          {d.allergens.length > 0 && (
-            <h4 className="pt-5 pb-2.5 text-[12px] font-semibold uppercase tracking-[0.1em]">{t(ui.allergens)}</h4>
-          )}
-        </div>
-      </div>
-
-      <div className="pt-2">
-        <AllergenChips allergens={d.allergens} size={open ? "md" : "sm"} />
-      </div>
-
-      {open && d.gallery && d.gallery.length > 0 && (
-        <div className="no-scrollbar -mx-4 mt-4 flex snap-x gap-3 overflow-x-auto px-4">
-          {d.gallery.map((src, i) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={src}
-              src={src}
-              alt={`${d.name} ${i + 1}`}
-              loading="lazy"
-              className="aspect-[4/5] w-[40%] shrink-0 snap-start rounded-lg object-cover"
-            />
-          ))}
-        </div>
-      )}
-
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        aria-controls={panelId}
-        className="mt-3 flex h-11 w-full items-center justify-center gap-1.5 rounded-lg text-[13px] font-semibold text-accent-light"
-      >
-        {t(open ? ui.less : ui.more)}
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden
-          className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`}
-        >
-          <path d="M6 9l6 6 6-6" />
-        </svg>
-      </button>
-    </article>
+      {open && <DishSheet dish={d} onClose={() => setOpen(false)} />}
+    </>
   );
 }
 
@@ -233,7 +175,7 @@ function DishCard({ dish: d }: { dish: Dish }) {
 function DishRow({ dish: d }: { dish: Dish }) {
   const { t } = useLang();
   const [open, setOpen] = useState(false);
-  const hasMedia = Boolean(d.videoUrl || d.posterUrl);
+  const hasMedia = !d.soldOut && Boolean(d.videoUrl || d.posterUrl);
 
   const content = (
     <>
@@ -323,6 +265,20 @@ function DishSheet({ dish: d, onClose }: { dish: Dish; onClose: () => void }) {
             </>
           )}
         </div>
+        {d.gallery && d.gallery.length > 0 && (
+          <div className="no-scrollbar -mx-4 mt-6 flex snap-x gap-3 overflow-x-auto px-4">
+            {d.gallery.map((src, i) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={src}
+                src={src}
+                alt={`${d.name} ${i + 1}`}
+                loading="lazy"
+                className="aspect-[4/5] w-[40%] shrink-0 snap-start rounded-lg object-cover"
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
