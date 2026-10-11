@@ -225,53 +225,64 @@ function DishCard({ dish: d }: { dish: Dish }) {
 
 /**
  * Linha compacta (bebidas, ou item sem mídia). Com mídia, mostra uma miniatura
- * e tocar abre o vídeo ali mesmo, sem ocupar a lista com cards grandes.
+ * com o vídeo em loop, sem ocupar a lista com cards grandes.
  */
 function DishRow({ dish: d }: { dish: Dish }) {
   const { t } = useLang();
-  const [open, setOpen] = useState(false);
-  const hasMedia = Boolean(d.posterUrl || d.videoUrl);
-
-  const info = (
-    <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-      <div className="flex items-baseline justify-between gap-3">
-        <h3 className="font-serif text-lg font-medium">{d.name}</h3>
-        <span className="whitespace-nowrap text-[17px] font-semibold">{formatPrice(d.price)}</span>
-      </div>
-      {d.soldOut && (
-        <div>
-          <SoldOut />
+  return (
+    <div className={`flex items-start gap-4 border-b border-hairline pb-5 ${d.soldOut ? "opacity-60" : ""}`}>
+      {(d.videoUrl || d.posterUrl) && <Thumb dish={d} />}
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+        <div className="flex items-baseline justify-between gap-3">
+          <h3 className="font-serif text-lg font-medium">{d.name}</h3>
+          <span className="whitespace-nowrap text-[17px] font-semibold">{formatPrice(d.price)}</span>
         </div>
-      )}
-      <p className="text-sm leading-snug text-on-surface-variant">{t(d.short)}</p>
-      <AllergenChips allergens={d.allergens} />
+        {d.soldOut && (
+          <div>
+            <SoldOut />
+          </div>
+        )}
+        <p className="text-sm leading-snug text-on-surface-variant">{t(d.short)}</p>
+        <AllergenChips allergens={d.allergens} />
+      </div>
     </div>
   );
+}
 
-  if (!hasMedia) {
-    return <div className={`border-b border-hairline pb-5 ${d.soldOut ? "opacity-60" : ""}`}>{info}</div>;
+/** Miniatura 4:5. Com vídeo, toca mudo em loop só quando está visível. */
+function Thumb({ dish: d }: { dish: Dish }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) video.play().catch(() => {});
+        else video.pause();
+      },
+      { threshold: 0.4 },
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
+  const className = "aspect-[4/5] w-[76px] shrink-0 rounded-lg bg-surface-container object-cover";
+  if (!d.videoUrl) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={d.posterUrl} alt={d.name} loading="lazy" className={className} />;
   }
-
   return (
-    <div className={`border-b border-hairline pb-5 ${d.soldOut ? "opacity-60" : ""}`}>
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        className="flex w-full items-start gap-4 text-left"
-      >
-        {!open && d.posterUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={d.posterUrl} alt={d.name} loading="lazy" className="aspect-[4/5] w-[76px] shrink-0 rounded-lg object-cover" />
-        )}
-        {info}
-      </button>
-      {open && (
-        <div className="pt-4">
-          <DishMedia videoUrl={d.videoUrl} posterUrl={d.posterUrl} alt={d.name} />
-        </div>
-      )}
-    </div>
+    <video
+      ref={ref}
+      src={d.videoUrl}
+      poster={d.posterUrl}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      aria-label={d.name}
+      className={className}
+    />
   );
 }
 
