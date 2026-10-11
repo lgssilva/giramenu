@@ -30,10 +30,13 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
     return () => observer.disconnect();
   }, [r.categories]);
 
+  // Centraliza o chip ativo rolando só a faixa de chips. scrollIntoView rolaria
+  // a página também e interromperia o "Voltar ao início" no meio do caminho.
   useEffect(() => {
-    chipsRef.current
-      ?.querySelector(`[data-chip="${active}"]`)
-      ?.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+    const bar = chipsRef.current;
+    const chip = bar?.querySelector<HTMLElement>(`[data-chip="${active}"]`);
+    if (!bar || !chip) return;
+    bar.scrollTo({ left: chip.offsetLeft - (bar.clientWidth - chip.offsetWidth) / 2, behavior: "smooth" });
   }, [active]);
 
   const goTo = (id: string) => {
@@ -392,7 +395,13 @@ function EndOfMenu({ restaurant: r }: { restaurant: Restaurant }) {
 
       <button
         type="button"
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        onClick={() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          // Garantia para o Safari, que às vezes para a rolagem suave no meio.
+          setTimeout(() => {
+            if (window.scrollY > 0) window.scrollTo({ top: 0 });
+          }, 1200);
+        }}
         className="flex h-11 items-center gap-2 rounded-full bg-surface-container px-5 text-sm text-on-surface-variant"
       >
         <span aria-hidden>↑</span>
