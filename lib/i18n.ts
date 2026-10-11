@@ -17,6 +17,8 @@ export const ui = {
   signature: { pt: "Especialidade da casa", en: "House speciality", es: "Especialidad de la casa", fr: "Spécialité de la maison" },
   allergens: { pt: "Alergénios", en: "Allergens", es: "Alérgenos", fr: "Allergènes" },
   soldOut: { pt: "Esgotado", en: "Sold out", es: "Agotado", fr: "Épuisé" },
+  more: { pt: "Ver detalhes", en: "See details", es: "Ver detalles", fr: "Voir les détails" },
+  less: { pt: "Fechar", en: "Close", es: "Cerrar", fr: "Fermer" },
   back: { pt: "Voltar", en: "Back", es: "Volver", fr: "Retour" },
   thanks: { pt: "Obrigado pela visita!", en: "Thank you for visiting!", es: "¡Gracias por su visita!", fr: "Merci de votre visite !" },
   thanksLine: {
@@ -27,7 +29,6 @@ export const ui = {
   },
   review: { pt: "Avaliar no Google", en: "Review us on Google", es: "Valorar en Google", fr: "Laisser un avis Google" },
   backToTop: { pt: "Voltar ao início", en: "Back to top", es: "Volver al inicio", fr: "Retour en haut" },
-  notFound: { pt: "Prato não encontrado.", en: "Dish not found.", es: "Plato no encontrado.", fr: "Plat introuvable." },
 } satisfies Record<string, T>;
 
 /** Idioma do navegador; inglês quando o idioma não é suportado (turista). */
