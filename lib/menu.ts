@@ -264,6 +264,8 @@ const tascaDoMar: Restaurant = {
         fr: "Eau minérale gazeuse, 25 cl.",
       },
       allergens: [],
+      videoUrl: "/videos/agua.mp4",
+      posterUrl: "/posters/agua.jpg",
     },
   ],
 };
