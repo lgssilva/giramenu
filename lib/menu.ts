@@ -29,7 +29,8 @@ export type Dish = {
   gallery?: string[];
 };
 
-export type Category = { id: string; name: T };
+/** compact: itens em linha com miniatura (ex.: bebidas), em vez de card grande. */
+export type Category = { id: string; name: T; compact?: boolean };
 
 export type Restaurant = {
   slug: string;
@@ -54,7 +55,7 @@ const tascaDoMar: Restaurant = {
     { id: "entradas", name: { pt: "Entradas", en: "Starters", es: "Entrantes", fr: "Entrées" } },
     { id: "pratos", name: { pt: "Pratos", en: "Mains", es: "Principales", fr: "Plats" } },
     { id: "sobremesas", name: { pt: "Sobremesas", en: "Desserts", es: "Postres", fr: "Desserts" } },
-    { id: "bebidas", name: { pt: "Bebidas", en: "Drinks", es: "Bebidas", fr: "Boissons" } },
+    { id: "bebidas", name: { pt: "Bebidas", en: "Drinks", es: "Bebidas", fr: "Boissons" }, compact: true },
   ],
   dishes: [
     {
@@ -242,6 +243,8 @@ const tascaDoMar: Restaurant = {
         fr: "Alvarinho, Monção e Melgaço.",
       },
       allergens: ["sulfitos"],
+      videoUrl: "/videos/vinho.mp4",
+      posterUrl: "/posters/vinho.jpg",
     },
     {
       id: "agua-das-pedras",

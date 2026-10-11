@@ -105,7 +105,7 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
             <h2 className="pb-4 font-serif text-xl font-medium">{t(c.name)}</h2>
             <div className="flex flex-col gap-6">
               {dishesIn(r, c.id).map((d) =>
-                d.posterUrl || d.videoUrl ? (
+                !c.compact && (d.posterUrl || d.videoUrl) ? (
                   <DishCard key={d.id} dish={d} />
                 ) : (
                   <DishRow key={d.id} dish={d} />
@@ -223,11 +223,17 @@ function DishCard({ dish: d }: { dish: Dish }) {
   );
 }
 
-/** Item sem vídeo (bebidas, extras): linha compacta, sem mídia. */
+/**
+ * Linha compacta (bebidas, ou item sem mídia). Com mídia, mostra uma miniatura
+ * e tocar abre o vídeo ali mesmo, sem ocupar a lista com cards grandes.
+ */
 function DishRow({ dish: d }: { dish: Dish }) {
   const { t } = useLang();
-  return (
-    <div className={`flex flex-col gap-1.5 border-b border-hairline pb-5 ${d.soldOut ? "opacity-60" : ""}`}>
+  const [open, setOpen] = useState(false);
+  const hasMedia = Boolean(d.posterUrl || d.videoUrl);
+
+  const info = (
+    <div className="flex min-w-0 flex-1 flex-col gap-1.5">
       <div className="flex items-baseline justify-between gap-3">
         <h3 className="font-serif text-lg font-medium">{d.name}</h3>
         <span className="whitespace-nowrap text-[17px] font-semibold">{formatPrice(d.price)}</span>
@@ -239,6 +245,32 @@ function DishRow({ dish: d }: { dish: Dish }) {
       )}
       <p className="text-sm leading-snug text-on-surface-variant">{t(d.short)}</p>
       <AllergenChips allergens={d.allergens} />
+    </div>
+  );
+
+  if (!hasMedia) {
+    return <div className={`border-b border-hairline pb-5 ${d.soldOut ? "opacity-60" : ""}`}>{info}</div>;
+  }
+
+  return (
+    <div className={`border-b border-hairline pb-5 ${d.soldOut ? "opacity-60" : ""}`}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-start gap-4 text-left"
+      >
+        {!open && d.posterUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={d.posterUrl} alt={d.name} loading="lazy" className="aspect-[4/5] w-[76px] shrink-0 rounded-lg object-cover" />
+        )}
+        {info}
+      </button>
+      {open && (
+        <div className="pt-4">
+          <DishMedia videoUrl={d.videoUrl} posterUrl={d.posterUrl} alt={d.name} />
+        </div>
+      )}
     </div>
   );
 }
