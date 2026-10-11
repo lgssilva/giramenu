@@ -53,6 +53,9 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
             <Link href={`/r/${r.slug}/prato/${signature.id}`} className="block">
               <DishMedia videoUrl={signature.videoUrl} posterUrl={signature.posterUrl} alt={signature.name} priority />
               <div className="flex flex-col gap-1.5 pt-4">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent-light">
+                  {t(ui.signature)}
+                </span>
                 <div className="flex items-baseline justify-between gap-3">
                   <h1 className="font-serif text-[2rem] font-semibold leading-tight">{signature.name}</h1>
                   <span className="whitespace-nowrap text-xl font-semibold text-accent-light">

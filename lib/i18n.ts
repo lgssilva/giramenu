@@ -14,6 +14,7 @@ export type T = Record<Lang, string>;
 export const ui = {
   chooseLang: { pt: "Escolher idioma", en: "Choose language", es: "Elegir idioma", fr: "Choisir la langue" },
   categories: { pt: "Categorias do menu", en: "Menu categories", es: "Categorías del menú", fr: "Catégories du menu" },
+  signature: { pt: "Especialidade da casa", en: "House speciality", es: "Especialidad de la casa", fr: "Spécialité de la maison" },
   allergens: { pt: "Alergénios", en: "Allergens", es: "Alérgenos", fr: "Allergènes" },
   soldOut: { pt: "Esgotado", en: "Sold out", es: "Agotado", fr: "Épuisé" },
   back: { pt: "Voltar", en: "Back", es: "Volver", fr: "Retour" },
