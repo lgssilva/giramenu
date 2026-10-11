@@ -22,7 +22,7 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
         const visible = entries.filter((e) => e.isIntersecting);
         if (visible.length) setActive(visible[0].target.id.replace("cat-", ""));
       },
-      { rootMargin: "-140px 0px -60% 0px" },
+      { rootMargin: "-160px 0px -60% 0px" },
     );
     r.categories.forEach((c) => {
       const el = document.getElementById(`cat-${c.id}`);
@@ -40,7 +40,7 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
   const goTo = (id: string) => {
     const el = document.getElementById(`cat-${id}`);
     if (!el) return;
-    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 136, behavior: "smooth" });
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 150, behavior: "smooth" });
   };
 
   return (
@@ -70,7 +70,7 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
 
         <nav
           aria-label={t(ui.categories)}
-          className="sticky top-[calc(4rem+env(safe-area-inset-top))] z-40 mt-6 bg-surface/90 py-2 backdrop-blur-md"
+          className="sticky top-[calc(4rem+env(safe-area-inset-top))] z-40 mt-6 border-b border-hairline bg-surface/90 py-3.5 backdrop-blur-md"
         >
           <div ref={chipsRef} className="no-scrollbar flex gap-2 overflow-x-auto px-4">
             {r.categories.map((c) => {
