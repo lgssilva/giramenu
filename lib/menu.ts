@@ -75,7 +75,8 @@ const tascaDoMar: Restaurant = {
         fr: "Palourdes de la Ria Formosa ouvertes à l'huile d'olive, ail écrasé, coriandre et un filet de citron. À déguster avec du pain.",
       },
       allergens: ["moluscos"],
-      posterUrl: img.ameijoas,
+      videoUrl: "/videos/ameijoas.mp4",
+      posterUrl: "/posters/ameijoas.jpg",
     },
     {
       id: "pao-azeitonas",
@@ -114,8 +115,9 @@ const tascaDoMar: Restaurant = {
         fr: "Un classique de Lisbonne. Morue effilochée sautée à l'huile d'olive avec oignon, pommes paille et œufs crémeux, olives et persil.",
       },
       allergens: ["peixe", "ovo"],
-      posterUrl: img.bacalhau,
       gallery: [img.azeiteAlho, img.ovoCremoso, img.sala],
+      videoUrl: "/videos/bacalhau.mp4",
+      posterUrl: "/posters/bacalhau.jpg",
     },
     {
       id: "arroz-de-marisco",
@@ -135,7 +137,8 @@ const tascaDoMar: Restaurant = {
         fr: "Riz moelleux cuit dans un bouillon de fruits de mer, crevettes tigrées, palourdes et coriandre. Pour deux.",
       },
       allergens: ["crustaceos", "moluscos"],
-      posterUrl: img.arroz,
+      videoUrl: "/videos/arroz.mp4",
+      posterUrl: "/posters/arroz.jpg",
     },
     {
       id: "polvo-a-lagareiro",
@@ -197,6 +200,8 @@ const tascaDoMar: Restaurant = {
         fr: "Pâte feuilletée croustillante, crème aux œufs et cannelle.",
       },
       allergens: ["gluten", "ovo", "leite"],
+      videoUrl: "/videos/nata.mp4",
+      posterUrl: "/posters/nata.jpg",
     },
     {
       id: "mousse-de-chocolate",
@@ -216,6 +221,8 @@ const tascaDoMar: Restaurant = {
         fr: "Chocolat noir, fleur de sel d'Aveiro.",
       },
       allergens: ["ovo", "leite"],
+      videoUrl: "/videos/mousse.mp4",
+      posterUrl: "/posters/mousse.jpg",
     },
     {
       id: "vinho-verde",
