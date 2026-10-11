@@ -225,13 +225,16 @@ function DishCard({ dish: d }: { dish: Dish }) {
 
 /**
  * Linha compacta (bebidas, ou item sem mídia). Com mídia, mostra uma miniatura
- * com o vídeo em loop, sem ocupar a lista com cards grandes.
+ * com o vídeo em loop; tocar abre o item em tela cheia por cima da lista.
  */
 function DishRow({ dish: d }: { dish: Dish }) {
   const { t } = useLang();
-  return (
-    <div className={`flex items-start gap-4 border-b border-hairline pb-5 ${d.soldOut ? "opacity-60" : ""}`}>
-      {(d.videoUrl || d.posterUrl) && <Thumb dish={d} />}
+  const [open, setOpen] = useState(false);
+  const hasMedia = Boolean(d.videoUrl || d.posterUrl);
+
+  const content = (
+    <>
+      {hasMedia && <Thumb dish={d} />}
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
         <div className="flex items-baseline justify-between gap-3">
           <h3 className="font-serif text-lg font-medium">{d.name}</h3>
@@ -244,6 +247,79 @@ function DishRow({ dish: d }: { dish: Dish }) {
         )}
         <p className="text-sm leading-snug text-on-surface-variant">{t(d.short)}</p>
         <AllergenChips allergens={d.allergens} />
+      </div>
+    </>
+  );
+
+  const rowClass = `flex w-full items-start gap-4 border-b border-hairline pb-5 text-left ${d.soldOut ? "opacity-60" : ""}`;
+  if (!hasMedia) return <div className={rowClass}>{content}</div>;
+
+  return (
+    <>
+      <button type="button" onClick={() => setOpen(true)} className={rowClass}>
+        {content}
+      </button>
+      {open && <DishSheet dish={d} onClose={() => setOpen(false)} />}
+    </>
+  );
+}
+
+/**
+ * Item em tela cheia por cima do menu. O "voltar" do celular também fecha,
+ * e a lista continua na mesma posição.
+ */
+function DishSheet({ dish: d, onClose }: { dish: Dish; onClose: () => void }) {
+  const { t } = useLang();
+
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
+
+  useEffect(() => {
+    history.pushState({ sheet: d.id }, "");
+    const onPop = () => closeRef.current();
+    window.addEventListener("popstate", onPop);
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("popstate", onPop);
+      document.body.style.overflow = overflow;
+    };
+  }, [d.id]);
+
+  return (
+    <div role="dialog" aria-modal="true" aria-label={d.name} className="fixed inset-0 z-[60] overflow-y-auto bg-surface">
+      <div className="mx-auto max-w-[480px] px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-[calc(2rem+env(safe-area-inset-bottom))]">
+        <div className="flex justify-end pb-3">
+          <button
+            type="button"
+            onClick={() => history.back()}
+            aria-label={t(ui.less)}
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-surface-container text-on-surface"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden>
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+        <DishMedia videoUrl={d.videoUrl} posterUrl={d.posterUrl} alt={d.name} dimmed={d.soldOut} priority />
+        <div className="flex flex-col gap-2 pt-4">
+          <div className="flex items-baseline justify-between gap-3">
+            <h2 className="font-serif text-[1.75rem] font-semibold leading-tight">{d.name}</h2>
+            <span className="whitespace-nowrap text-xl font-semibold text-accent-light">{formatPrice(d.price)}</span>
+          </div>
+          {d.soldOut && (
+            <div>
+              <SoldOut />
+            </div>
+          )}
+          <p className="text-[15px] leading-relaxed text-on-surface-variant">{t(d.description)}</p>
+          {d.allergens.length > 0 && (
+            <>
+              <h3 className="pt-3 text-[12px] font-semibold uppercase tracking-[0.1em]">{t(ui.allergens)}</h3>
+              <AllergenChips allergens={d.allergens} size="md" />
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
