@@ -27,7 +27,11 @@ export const ui = {
     es: "Esperamos que disfrute de nuestra cocina y del frescor del mar de Cascais.",
     fr: "Nous espérons que vous apprécierez notre cuisine et la fraîcheur de la mer de Cascais.",
   },
-  review: { pt: "Avaliar no Google", en: "Review us on Google", es: "Valorar en Google", fr: "Laisser un avis Google" },
+  reviewTitle: { pt: "Gostou? Deixe a sua avaliação", en: "Enjoyed it? Leave a review", es: "¿Le ha gustado? Deje su opinión", fr: "Vous avez aimé ? Laissez un avis" },
+  reviewGoogle: { pt: "Avaliar no Google", en: "Review us on Google", es: "Valorar en Google", fr: "Laisser un avis Google" },
+  reviewTripadvisor: { pt: "Avaliar no Tripadvisor", en: "Review us on Tripadvisor", es: "Valorar en Tripadvisor", fr: "Laisser un avis Tripadvisor" },
+  // O logo "TheFork" entra logo depois deste texto.
+  reviewTheFork: { pt: "Avaliar no", en: "Review us on", es: "Valorar en", fr: "Laisser un avis sur" },
   backToTop: { pt: "Voltar ao início", en: "Back to top", es: "Volver al inicio", fr: "Retour en haut" },
 } satisfies Record<string, T>;
 

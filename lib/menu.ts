@@ -29,6 +29,13 @@ export type Dish = {
   gallery?: string[];
 };
 
+export type ReviewPlatform = "google" | "tripadvisor" | "thefork";
+/**
+ * Link de avaliação. A ordem da lista é a ordem dos botões; sem url, o botão some.
+ * Google: https://search.google.com/local/writereview?placeid=<PLACE_ID> (abre direto a caixa de avaliação).
+ */
+export type ReviewLink = { platform: ReviewPlatform; url?: string };
+
 /** compact: itens em linha com miniatura (ex.: bebidas), em vez de card grande. */
 export type Category = { id: string; name: T; compact?: boolean };
 
@@ -38,7 +45,7 @@ export type Restaurant = {
   tagline: string;
   /** Cor de destaque da marca do restaurante. */
   accent: string;
-  googleReviewUrl: string;
+  reviewLinks: ReviewLink[];
   signatureDishId: string;
   categories: Category[];
   dishes: Dish[];
@@ -49,7 +56,12 @@ const tascaDoMar: Restaurant = {
   name: "Tasca do Mar",
   tagline: "Cascais · 1984",
   accent: "#5e7153",
-  googleReviewUrl: "https://www.google.com/maps",
+  // Links de demonstração. No restaurante real, usar os links diretos de avaliação.
+  reviewLinks: [
+    { platform: "google", url: "https://www.google.com/maps" },
+    { platform: "tripadvisor", url: "https://www.tripadvisor.pt" },
+    { platform: "thefork", url: "https://www.thefork.pt" },
+  ],
   signatureDishId: "polvo-a-lagareiro",
   categories: [
     { id: "entradas", name: { pt: "Entradas", en: "Starters", es: "Entrantes", fr: "Entrées" } },
