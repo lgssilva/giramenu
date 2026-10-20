@@ -5,6 +5,7 @@ import { ui } from "@/lib/i18n";
 import { dishesIn, formatPrice, type Dish, type Restaurant } from "@/lib/menu";
 import { AllergenChips } from "./AllergenChips";
 import { DishMedia } from "./DishMedia";
+import { ReviewButtons } from "./ReviewButtons";
 import { useLang } from "./LangProvider";
 import { TopBar } from "./TopBar";
 
@@ -339,15 +340,7 @@ function EndOfMenu({ restaurant: r }: { restaurant: Restaurant }) {
         <p className="text-[15px] leading-relaxed text-on-surface-variant">{t(ui.thanksLine)}</p>
       </div>
 
-      <a
-        href={r.googleReviewUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-accent text-[15px] font-semibold text-on-surface"
-      >
-        <span aria-hidden className="text-[#f4c542]">★</span>
-        {t(ui.review)}
-      </a>
+      <ReviewButtons links={r.reviewLinks} />
 
       <button
         type="button"
