@@ -1,4 +1,5 @@
 import { img } from "./images";
+import { pizzariaDemo } from "./pizzaria-demo";
 import type { T } from "./i18n";
 
 export type Allergen =
@@ -39,12 +40,33 @@ export type ReviewLink = { platform: ReviewPlatform; url?: string };
 /** compact: itens em linha com miniatura (ex.: bebidas), em vez de card grande. */
 export type Category = { id: string; name: T; compact?: boolean };
 
+/**
+ * Pedido por WhatsApp (delivery). Sem carrinho nem pagamento: o botão abre a
+ * conversa com a mensagem pronta. Sem número, o WhatsApp pede para escolher o contato.
+ */
+export type OrderConfig = {
+  /** Número só com dígitos e código do país, ex.: "351912345678". */
+  whatsapp?: string;
+  /** Texto do botão nos cards (ex.: "Pedir pizza"). */
+  label: T;
+};
+
 export type Restaurant = {
   slug: string;
   name: string;
   tagline: string;
-  /** Cor de destaque da marca do restaurante. */
+  /** Tema do menu, escolhido pelo restaurante. Padrão: escuro. */
+  theme?: "dark" | "light";
+  /** Cor de destaque da marca do restaurante (botões e chip ativo). */
   accent: string;
+  /** Cor de textos em destaque, como o preço (padrão: tom claro do tema). */
+  accentText?: string;
+  /** Segunda cor de detalhe (selo, linhas). */
+  highlight?: string;
+  order?: OrderConfig;
+  /** Textos do fim do menu; sem eles vale o padrão de restaurante. */
+  thanks?: T;
+  thanksLine?: T;
   reviewLinks: ReviewLink[];
   signatureDishId: string;
   categories: Category[];
@@ -282,7 +304,7 @@ const tascaDoMar: Restaurant = {
   ],
 };
 
-export const restaurants: Restaurant[] = [tascaDoMar];
+export const restaurants: Restaurant[] = [tascaDoMar, pizzariaDemo];
 
 export function getRestaurant(slug: string) {
   return restaurants.find((r) => r.slug === slug);

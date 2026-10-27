@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Props = {
   videoUrl?: string;
@@ -19,6 +19,8 @@ type Props = {
 export function DishMedia({ videoUrl, posterUrl, alt, dimmed, priority, badge }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
+  // Imagem provisória que não carregou vira um fundo neutro, sem ícone quebrado.
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -66,7 +68,7 @@ export function DishMedia({ videoUrl, posterUrl, alt, dimmed, priority, badge }:
           preload="metadata"
           aria-label={alt}
         />
-      ) : posterUrl ? (
+      ) : posterUrl && !failed ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           className="h-full w-full object-cover"
@@ -74,11 +76,16 @@ export function DishMedia({ videoUrl, posterUrl, alt, dimmed, priority, badge }:
           alt={alt}
           loading={priority ? "eager" : "lazy"}
           fetchPriority={priority ? "high" : "auto"}
+          onError={() => setFailed(true)}
         />
+      ) : posterUrl ? (
+        <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_50%_40%,var(--color-highlight),transparent_70%)] opacity-60">
+          <span aria-hidden className="text-7xl">🍕</span>
+        </div>
       ) : null}
       {badge && (
         <span className="absolute left-3 top-3 flex h-7 items-center gap-1.5 rounded-full bg-black/55 px-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-md">
-          <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent-light" />
+          <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-highlight" />
           {badge}
         </span>
       )}

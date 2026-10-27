@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
-// Por enquanto a raiz abre o restaurante de demonstração.
+// A raiz abre o restaurante de demonstração. HOME_SLUG (variável na Vercel)
+// troca qual menu abre, ex.: "pizzaria-demo" no projeto giramenu-pizza.
 export default function Home() {
-  redirect("/r/tasca-do-mar");
+  redirect(`/r/${process.env.HOME_SLUG || "tasca-do-mar"}`);
 }

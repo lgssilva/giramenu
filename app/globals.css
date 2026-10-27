@@ -13,6 +13,8 @@
   --color-outline: #8e9288;
   --color-accent: #5e7153;
   --color-accent-light: #b8cda9;
+  --color-on-accent: #f3f4f2;
+  --color-highlight: #b8cda9;
 
   --font-serif: var(--font-playfair), Georgia, serif;
   --font-sans: var(--font-jakarta), system-ui, sans-serif;
@@ -21,6 +23,28 @@
 html {
   background: var(--color-surface);
   color-scheme: dark;
+}
+
+/* Tema claro, escolhido pelo restaurante (ex.: pizzaria de delivery). */
+[data-theme="light"] {
+  --color-surface: #fff8ee;
+  --color-surface-lowest: #f3e8d8;
+  --color-surface-low: #fbf0e1;
+  --color-surface-container: #ffffff;
+  --color-surface-high: #f5e9d8;
+  --color-hairline: #ecdcc6;
+  --color-on-surface: #2b1a14;
+  --color-on-surface-variant: #6b5448;
+  --color-outline: #9a857a;
+  --color-on-accent: #ffffff;
+  color-scheme: light;
+}
+html:has([data-theme="light"]) {
+  background: #fff8ee;
+  color-scheme: light;
+}
+html:has([data-theme="light"]) body {
+  background: #fff8ee;
 }
 
 body {

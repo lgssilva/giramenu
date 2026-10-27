@@ -45,7 +45,7 @@ const PLATFORMS: Record<ReviewPlatform, { label: T; logo: ReactNode; className: 
     label: ui.reviewGoogle,
     logo: <GoogleLogo />,
     // Botão branco com o "G" colorido: padrão do próprio Google.
-    className: "bg-white text-[#1f1f1f]",
+    className: "bg-white text-[#1f1f1f] ring-1 ring-black/10",
   },
   tripadvisor: {
     label: ui.reviewTripadvisor,

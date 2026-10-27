@@ -36,7 +36,7 @@ export function TopBar({ name, tagline, backHref }: { name: string; tagline?: st
           )}
           <div className="flex min-w-0 items-center gap-2.5">
             {/* Marca provisória do restaurante; no MVP vem o logo real. */}
-            <svg width="30" height="14" viewBox="0 0 72 18" fill="none" aria-hidden className="shrink-0 text-accent-light">
+            <svg width="30" height="14" viewBox="0 0 72 18" fill="none" aria-hidden className="shrink-0 text-highlight">
               <path d="M1 12c8-8 16-8 24 0s16 8 24 0 14-8 22-2" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
             </svg>
             <div className="flex min-w-0 flex-col leading-none">
