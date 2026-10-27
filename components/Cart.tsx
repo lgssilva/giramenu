@@ -12,6 +12,7 @@ import { useLang } from "./LangProvider";
  */
 
 const txt = {
+  add: { pt: "Adicionar", en: "Add", es: "Añadir", fr: "Ajouter" },
   inOrder: { pt: "no pedido", en: "in order", es: "en el pedido", fr: "dans la commande" },
   viewOrder: { pt: "Ver pedido", en: "View order", es: "Ver pedido", fr: "Voir la commande" },
   yourOrder: { pt: "O seu pedido", en: "Your order", es: "Su pedido", fr: "Votre commande" },
@@ -123,17 +124,33 @@ export function SizePicker({ dish, value, onChange }: { dish: Dish; value?: stri
   );
 }
 
+/** Ícones + e − em SVG: o caractere de texto fica desalinhado dentro do círculo. */
+function Plus({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" aria-hidden>
+      <path d="M12 5v14M5 12h14" />
+    </svg>
+  );
+}
+function Minus({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" aria-hidden>
+      <path d="M5 12h14" />
+    </svg>
+  );
+}
+
 function Stepper({ qty, onMinus, onPlus, compact }: { qty: number; onMinus: () => void; onPlus: () => void; compact?: boolean }) {
   const { t } = useLang();
-  const btn = `flex items-center justify-center rounded-full bg-accent text-on-accent text-xl font-semibold active:opacity-80 ${compact ? "h-9 w-9" : "h-11 w-11"}`;
+  const btn = `flex shrink-0 items-center justify-center rounded-full bg-accent text-on-accent active:opacity-80 ${compact ? "h-9 w-9" : "h-11 w-11"}`;
   return (
     <div className="flex items-center gap-3">
       <button type="button" onClick={onMinus} aria-label={t(txt.remove)} className={btn}>
-        −
+        <Minus size={compact ? 16 : 18} />
       </button>
       <span className="min-w-5 text-center text-base font-semibold tabular-nums">{qty}</span>
       <button type="button" onClick={onPlus} aria-label={t(txt.addOne)} className={btn}>
-        +
+        <Plus size={compact ? 16 : 18} />
       </button>
     </div>
   );
@@ -164,7 +181,7 @@ export function AddToOrder({ dish, sizeId }: { dish: Dish; sizeId?: string }) {
       onClick={() => cart.change(dish, sizeId, 1)}
       className="mt-2 flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-accent text-base font-semibold text-on-accent shadow-[0_6px_18px_-8px_var(--color-accent)] active:scale-[0.99] active:opacity-90"
     >
-      <span aria-hidden className="text-xl leading-none">+</span>
+      <Plus size={20} />
       {t(cart.restaurant.order.label)} · {formatPrice(unitPrice(dish, sizeId))}
     </button>
   );
@@ -183,10 +200,11 @@ export function AddSmall({ dish }: { dish: Dish }) {
     <button
       type="button"
       onClick={() => cart.change(dish, undefined, 1)}
-      aria-label={`${t(cart.restaurant.order.label)}: ${dish.name}`}
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-xl font-semibold text-on-accent active:opacity-80"
+      aria-label={`${t(txt.add)}: ${dish.name}`}
+      className="flex h-10 shrink-0 items-center gap-1.5 rounded-full border-[1.5px] border-accent px-4 text-sm font-semibold text-accent active:bg-accent active:text-on-accent"
     >
-      +
+      <Plus size={16} />
+      {t(txt.add)}
     </button>
   );
 }

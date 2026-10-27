@@ -218,13 +218,15 @@ function DishRow({ dish: d, restaurant: r }: { dish: Dish; restaurant: Restauran
   const [open, setOpen] = useState(false);
   const hasMedia = !d.soldOut && Boolean(d.videoUrl || d.posterUrl);
 
+  // Com pedido, o preço vai para baixo do texto e o botão "Adicionar" fica à direita.
+  const orderable = Boolean(r.order) && !d.soldOut;
   const content = (
     <>
       {hasMedia && <Thumb dish={d} />}
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
         <div className="flex items-baseline justify-between gap-3">
           <h3 className="font-serif text-lg font-medium">{d.name}</h3>
-          <span className="whitespace-nowrap text-[17px] font-semibold">{formatPrice(d.price)}</span>
+          {!orderable && <span className="whitespace-nowrap text-[17px] font-semibold">{formatPrice(d.price)}</span>}
         </div>
         {d.soldOut && (
           <div>
@@ -233,13 +235,14 @@ function DishRow({ dish: d, restaurant: r }: { dish: Dish; restaurant: Restauran
         )}
         <p className="text-sm leading-snug text-on-surface-variant">{t(d.short)}</p>
         <AllergenChips allergens={d.allergens} />
+        {orderable && <span className="text-[17px] font-semibold text-accent-light">{formatPrice(d.price)}</span>}
       </div>
     </>
   );
 
   const rowClass = `flex w-full items-start gap-4 border-b border-hairline pb-5 text-left ${d.soldOut ? "opacity-60" : ""}`;
   // Botão "+" do pedido fica fora do botão da linha (botão dentro de botão não vale).
-  const add = r.order && !d.soldOut ? <div className="self-center"><AddSmall dish={d} /></div> : null;
+  const add = orderable ? <div className="self-center"><AddSmall dish={d} /></div> : null;
   if (!hasMedia)
     return (
       <div className={rowClass}>
