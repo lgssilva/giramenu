@@ -1,4 +1,11 @@
-import type { Restaurant } from "./menu";
+import type { Restaurant, Size } from "./menu";
+
+/** Tamanhos P/M/G; o preço da média é o "price" do item. */
+const sizes = (p: number, m: number, g: number): Size[] => [
+  { id: "p", label: { pt: "Pequena · 25 cm", en: "Small · 25 cm", es: "Pequeña · 25 cm", fr: "Petite · 25 cm" }, price: p },
+  { id: "m", label: { pt: "Média · 30 cm", en: "Medium · 30 cm", es: "Mediana · 30 cm", fr: "Moyenne · 30 cm" }, price: m },
+  { id: "g", label: { pt: "Grande · 35 cm", en: "Large · 35 cm", es: "Grande · 35 cm", fr: "Grande · 35 cm" }, price: g },
+];
 
 // Demo de pizzaria para delivery (pedido de casa, pelo WhatsApp).
 // Vídeos provisórios gerados no Firefly (IA). Os reais seriam filmados na pizzaria.
@@ -14,7 +21,8 @@ export const pizzariaDemo: Restaurant = {
   order: {
     // Número da pizzaria (só dígitos, com 351). Vazio = o WhatsApp pede o contato.
     whatsapp: "",
-    label: { pt: "Pedir pizza", en: "Order pizza", es: "Pedir pizza", fr: "Commander" },
+    label: { pt: "Adicionar ao pedido", en: "Add to order", es: "Añadir al pedido", fr: "Ajouter" },
+    pickup: true,
   },
   thanks: {
     pt: "Obrigado pela preferência!",
@@ -28,7 +36,12 @@ export const pizzariaDemo: Restaurant = {
     es: "Masa de larga fermentación, horno de leña e ingredientes italianos. ¡Buen provecho!",
     fr: "Pâte à longue fermentation, four à bois et ingrédients italiens. Bon appétit !",
   },
-  reviewLinks: [{ platform: "google", url: "https://www.google.com/maps" }],
+  // Links de demonstração. Na pizzaria real, usar os links diretos de avaliação.
+  reviewLinks: [
+    { platform: "google", url: "https://www.google.com/maps" },
+    { platform: "tripadvisor", url: "https://www.tripadvisor.pt" },
+    { platform: "thefork", url: "https://www.thefork.pt" },
+  ],
   signatureDishId: "margherita",
   categories: [
     { id: "pizzas", name: { pt: "Pizzas", en: "Pizzas", es: "Pizzas", fr: "Pizzas" } },
@@ -41,6 +54,8 @@ export const pizzariaDemo: Restaurant = {
       category: "pizzas",
       name: "Margherita",
       price: 10.5,
+      sizes: sizes(8.5, 10.5, 13.5),
+      defaultSize: "m",
       short: {
         pt: "Tomate San Marzano, mozzarella fior di latte e manjericão.",
         en: "San Marzano tomato, fior di latte mozzarella and basil.",
@@ -62,6 +77,8 @@ export const pizzariaDemo: Restaurant = {
       category: "pizzas",
       name: "Pepperoni",
       price: 12.5,
+      sizes: sizes(10, 12.5, 15.5),
+      defaultSize: "m",
       short: {
         pt: "Molho de tomate, mozzarella e pepperoni picante.",
         en: "Tomato sauce, mozzarella and spicy pepperoni.",
@@ -83,6 +100,8 @@ export const pizzariaDemo: Restaurant = {
       category: "pizzas",
       name: "Quatro Queijos",
       price: 13,
+      sizes: sizes(10.5, 13, 16),
+      defaultSize: "m",
       short: {
         pt: "Mozzarella, gorgonzola, parmesão e queijo da Serra.",
         en: "Mozzarella, gorgonzola, parmesan and Serra cheese.",
@@ -104,6 +123,8 @@ export const pizzariaDemo: Restaurant = {
       category: "pizzas",
       name: "Diavola",
       price: 12.5,
+      sizes: sizes(10, 12.5, 15.5),
+      defaultSize: "m",
       short: {
         pt: "Salame picante, malagueta fresca e mel picante.",
         en: "Spicy salami, fresh chilli and hot honey.",
@@ -125,6 +146,8 @@ export const pizzariaDemo: Restaurant = {
       category: "pizzas",
       name: "Prosciutto e Rúcula",
       price: 14,
+      sizes: sizes(11.5, 14, 17),
+      defaultSize: "m",
       short: {
         pt: "Presunto cru, rúcula, tomate cherry e lascas de parmesão.",
         en: "Prosciutto, rocket, cherry tomatoes and parmesan shavings.",
@@ -146,6 +169,8 @@ export const pizzariaDemo: Restaurant = {
       category: "sobremesas",
       name: "Pizza de Chocolate e Morango",
       price: 11,
+      sizes: sizes(9, 11, 14),
+      defaultSize: "m",
       short: {
         pt: "Creme de chocolate, morangos frescos e açúcar em pó.",
         en: "Chocolate cream, fresh strawberries and icing sugar.",

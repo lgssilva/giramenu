@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ui } from "@/lib/i18n";
 import { dishesIn, formatPrice, type Dish, type Restaurant } from "@/lib/menu";
+import { unitPrice } from "./Cart";
 import { AllergenChips } from "./AllergenChips";
+import { AddSmall, AddToOrder, CartBar, CartProvider, SizePicker } from "./Cart";
 import { DishMedia } from "./DishMedia";
 import { ReviewButtons } from "./ReviewButtons";
 import { useLang } from "./LangProvider";
@@ -53,12 +55,14 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
     ...(r.highlight && { "--color-highlight": r.highlight }),
   } as CSSProperties;
   const canOrder = (d: Dish) => Boolean(r.order) && !d.soldOut && !r.categories.find((c) => c.id === d.category)?.compact;
+  const [sigSize, setSigSize] = useSize(signature);
 
   return (
+    <CartProvider restaurant={r}>
     <div data-theme={r.theme ?? "dark"} style={vars} className="flex min-h-dvh flex-col bg-surface text-on-surface">
       <TopBar name={r.name} tagline={r.tagline} />
 
-      <main className="flex-1 pb-10">
+      <main className={`flex-1 ${r.order ? "pb-28" : "pb-10"}`}>
         {signature && (
           <section className="px-4 pt-4">
             <div>
@@ -73,14 +77,19 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
                 <div className="flex items-baseline justify-between gap-3">
                   <h1 className="font-serif text-[2rem] font-semibold leading-tight">{signature.name}</h1>
                   <span className="whitespace-nowrap text-xl font-semibold text-accent-light">
-                    {formatPrice(signature.price)}
+                    {formatPrice(unitPrice(signature, sigSize))}
                   </span>
                 </div>
                 <p className="text-[15px] leading-relaxed text-on-surface-variant">{t(signature.description)}</p>
                 <div className="pt-1">
                   <AllergenChips allergens={signature.allergens} />
                 </div>
-                {canOrder(signature) && <OrderButton restaurant={r} dish={signature} />}
+                {canOrder(signature) && (
+                  <>
+                    <SizePicker dish={signature} value={sigSize} onChange={setSigSize} />
+                    <AddToOrder dish={signature} sizeId={sigSize} />
+                  </>
+                )}
               </div>
             </div>
           </section>
@@ -130,39 +139,15 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
 
         <EndOfMenu restaurant={r} />
       </main>
+      <CartBar />
     </div>
+    </CartProvider>
   );
 }
 
-/** Mensagem que chega no WhatsApp da pizzaria, sempre em português. */
-function orderLink(r: Restaurant, d: Dish) {
-  const text = `Olá, ${r.name}! Quero pedir:\n• 1x ${d.name} (${formatPrice(d.price)})\n\nNome:\nMorada de entrega:`;
-  return `https://wa.me/${r.order?.whatsapp ?? ""}?text=${encodeURIComponent(text)}`;
-}
-
-/** Botão de pedido: abre o WhatsApp da pizzaria com a mensagem pronta. */
-function OrderButton({ restaurant: r, dish: d }: { restaurant: Restaurant; dish: Dish }) {
-  const { t } = useLang();
-  if (!r.order) return null;
-  return (
-    <a
-      href={orderLink(r, d)}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="mt-2 flex h-14 w-full items-center justify-center gap-2.5 rounded-xl bg-accent text-base font-semibold text-on-accent shadow-[0_6px_18px_-8px_var(--color-accent)] active:scale-[0.99] active:opacity-90"
-    >
-      <WhatsAppIcon />
-      {t(r.order.label)}
-    </a>
-  );
-}
-
-function WhatsAppIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.56.93.95-3.47-.22-.36a9.38 9.38 0 0 1-1.44-5.01c0-5.19 4.23-9.41 9.43-9.41 2.52 0 4.88.98 6.66 2.76a9.35 9.35 0 0 1 2.76 6.66c0 5.19-4.23 9.41-9.43 9.41zm8.03-17.44A11.3 11.3 0 0 0 12.05.73C5.79.73.7 5.82.7 12.08c0 2 .52 3.95 1.52 5.67L.6 23.27l5.65-1.48a11.3 11.3 0 0 0 5.8 1.48h.01c6.26 0 11.35-5.09 11.35-11.35 0-3.03-1.18-5.88-3.33-8.03z" />
-    </svg>
-  );
+/** Tamanho escolhido do item (o padrão do item, ou o primeiro). */
+function useSize(d?: Dish) {
+  return useState<string | undefined>(d?.defaultSize ?? d?.sizes?.[0]?.id);
 }
 
 function SoldOut() {
@@ -178,6 +163,7 @@ function SoldOut() {
 function DishCard({ dish: d, restaurant: r, canOrder }: { dish: Dish; restaurant: Restaurant; canOrder: boolean }) {
   const { t } = useLang();
   const [open, setOpen] = useState(false);
+  const [size, setSize] = useSize(d);
 
   return (
     <div className="rounded-xl bg-surface-container p-4 shadow-[0_1px_0_var(--color-hairline)]">
@@ -186,7 +172,7 @@ function DishCard({ dish: d, restaurant: r, canOrder }: { dish: Dish; restaurant
         <div className="flex flex-col gap-1.5 pt-3">
           <div className="flex items-baseline justify-between gap-3">
             <h3 className="font-serif text-[1.625rem] font-semibold leading-tight">{d.name}</h3>
-            <span className="whitespace-nowrap text-xl font-semibold">{formatPrice(d.price)}</span>
+            <span className="whitespace-nowrap text-xl font-semibold">{formatPrice(unitPrice(d, size))}</span>
           </div>
           <p className="text-sm leading-snug text-on-surface-variant">{t(d.short)}</p>
           <div className="pt-0.5">
@@ -202,8 +188,15 @@ function DishCard({ dish: d, restaurant: r, canOrder }: { dish: Dish; restaurant
           )}
         </div>
       </button>
-      {canOrder && <OrderButton restaurant={r} dish={d} />}
-      {open && <DishSheet dish={d} restaurant={r} canOrder={canOrder} onClose={() => setOpen(false)} />}
+      {canOrder && (
+        <div className="flex flex-col gap-1 pt-1">
+          <SizePicker dish={d} value={size} onChange={setSize} />
+          <AddToOrder dish={d} sizeId={size} />
+        </div>
+      )}
+      {open && (
+        <DishSheet dish={d} restaurant={r} canOrder={canOrder} size={size} setSize={setSize} onClose={() => setOpen(false)} />
+      )}
     </div>
   );
 }
@@ -237,13 +230,24 @@ function DishRow({ dish: d, restaurant: r }: { dish: Dish; restaurant: Restauran
   );
 
   const rowClass = `flex w-full items-start gap-4 border-b border-hairline pb-5 text-left ${d.soldOut ? "opacity-60" : ""}`;
-  if (!hasMedia) return <div className={rowClass}>{content}</div>;
+  // Botão "+" do pedido fica fora do botão da linha (botão dentro de botão não vale).
+  const add = r.order && !d.soldOut ? <div className="self-center"><AddSmall dish={d} /></div> : null;
+  if (!hasMedia)
+    return (
+      <div className={rowClass}>
+        {content}
+        {add}
+      </div>
+    );
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className={rowClass}>
-        {content}
-      </button>
+      <div className={rowClass}>
+        <button type="button" onClick={() => setOpen(true)} className="flex min-w-0 flex-1 items-start gap-4 text-left">
+          {content}
+        </button>
+        {add}
+      </div>
       {open && <DishSheet dish={d} restaurant={r} canOrder={false} onClose={() => setOpen(false)} />}
     </>
   );
@@ -255,13 +259,16 @@ function DishRow({ dish: d, restaurant: r }: { dish: Dish; restaurant: Restauran
  */
 function DishSheet({
   dish: d,
-  restaurant: r,
   canOrder,
+  size,
+  setSize,
   onClose,
 }: {
   dish: Dish;
   restaurant: Restaurant;
   canOrder: boolean;
+  size?: string;
+  setSize?: (id: string) => void;
   onClose: () => void;
 }) {
   const { t } = useLang();
@@ -300,7 +307,7 @@ function DishSheet({
         <div className="flex flex-col gap-2 pt-4">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="font-serif text-[1.75rem] font-semibold leading-tight">{d.name}</h2>
-            <span className="whitespace-nowrap text-xl font-semibold text-accent-light">{formatPrice(d.price)}</span>
+            <span className="whitespace-nowrap text-xl font-semibold text-accent-light">{formatPrice(unitPrice(d, size))}</span>
           </div>
           {d.soldOut && (
             <div>
@@ -308,7 +315,12 @@ function DishSheet({
             </div>
           )}
           <p className="text-[15px] leading-relaxed text-on-surface-variant">{t(d.description)}</p>
-          {canOrder && <OrderButton restaurant={r} dish={d} />}
+          {canOrder && (
+            <>
+              {setSize && <SizePicker dish={d} value={size} onChange={setSize} />}
+              <AddToOrder dish={d} sizeId={size} />
+            </>
+          )}
           {d.allergens.length > 0 && (
             <>
               <h3 className="pt-3 text-[12px] font-semibold uppercase tracking-[0.1em]">{t(ui.allergens)}</h3>

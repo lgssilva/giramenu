@@ -28,7 +28,12 @@ export type Dish = {
   videoUrl?: string;
   posterUrl?: string;
   gallery?: string[];
+  /** Tamanhos com preço próprio (ex.: pizza P/M/G). O primeiro é o padrão se não houver defaultSize. */
+  sizes?: Size[];
+  defaultSize?: string;
 };
+
+export type Size = { id: string; label: T; price: number };
 
 export type ReviewPlatform = "google" | "tripadvisor" | "thefork";
 /**
@@ -49,6 +54,8 @@ export type OrderConfig = {
   whatsapp?: string;
   /** Texto do botão nos cards (ex.: "Pedir pizza"). */
   label: T;
+  /** Permite escolher "Levantar no local" além de entrega. */
+  pickup?: boolean;
 };
 
 export type Restaurant = {
