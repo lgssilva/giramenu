@@ -1,14 +1,12 @@
 import type { Restaurant } from "./menu";
 
 // Demo de pizzaria para delivery (pedido de casa, pelo WhatsApp).
-// Imagens provisórias do Unsplash até chegarem os vídeos reais das pizzas.
-// Para trocar por vídeo: preencher videoUrl ("/videos/margherita.mp4") e posterUrl.
-const u = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&h=1125&q=70`;
+// Vídeos provisórios gerados no Firefly (IA). Os reais seriam filmados na pizzaria.
 
 export const pizzariaDemo: Restaurant = {
   slug: "pizzaria-demo",
   name: "Forno da Vila",
-  tagline: "Forno a lenha · Entrega 30–40 min",
+  tagline: "Forno a lenha · 30–40 min",
   theme: "light",
   accent: "#7a1f2b", // bordô: botões
   accentText: "#c8102e", // vermelho: preços
@@ -56,7 +54,8 @@ export const pizzariaDemo: Restaurant = {
         fr: "La classique de Naples. Pâte de 48 heures, tomate San Marzano, mozzarella fior di latte, basilic frais et huile d'olive vierge extra. Cuite au feu de bois en 90 secondes.",
       },
       allergens: ["gluten", "leite"],
-      posterUrl: u("photo-1574071318508-1cdbab80d002"),
+      videoUrl: "/videos/margherita.mp4",
+      posterUrl: "/posters/margherita.jpg",
     },
     {
       id: "pepperoni",
@@ -76,7 +75,8 @@ export const pizzariaDemo: Restaurant = {
         fr: "Sauce tomate maison, mozzarella fondue et tranches de pepperoni croustillantes. La plus commandée le week-end.",
       },
       allergens: ["gluten", "leite", "sulfitos"],
-      posterUrl: u("photo-1628840042765-356cda07504e"),
+      videoUrl: "/videos/pepperoni.mp4",
+      posterUrl: "/posters/pepperoni.jpg",
     },
     {
       id: "quatro-queijos",
@@ -96,7 +96,8 @@ export const pizzariaDemo: Restaurant = {
         fr: "Base blanche, mozzarella, gorgonzola, parmesan et une touche de fromage da Serra. Pour les amoureux du fromage.",
       },
       allergens: ["gluten", "leite"],
-      posterUrl: u("photo-1513104890138-7c749659a591"),
+      videoUrl: "/videos/quatro-queijos.mp4",
+      posterUrl: "/posters/quatro-queijos.jpg",
     },
     {
       id: "diavola",
@@ -116,7 +117,8 @@ export const pizzariaDemo: Restaurant = {
         fr: "Tomate, mozzarella, salami piquant, piment frais et un filet de miel épicé. Sucré et piquant à la fois.",
       },
       allergens: ["gluten", "leite", "sulfitos"],
-      posterUrl: u("photo-1565299624946-b28f40a0ca4b"),
+      videoUrl: "/videos/diavola.mp4",
+      posterUrl: "/posters/diavola.jpg",
     },
     {
       id: "prosciutto-rucula",
@@ -136,7 +138,8 @@ export const pizzariaDemo: Restaurant = {
         fr: "Cuite avec tomate et mozzarella, puis garnie de jambon cru, roquette fraîche, tomates cerises et parmesan.",
       },
       allergens: ["gluten", "leite"],
-      posterUrl: u("photo-1571997478779-2adcbbe9ab2f"),
+      videoUrl: "/videos/prosciutto-rucula.mp4",
+      posterUrl: "/posters/prosciutto-rucula.jpg",
     },
     {
       id: "chocolate-morango",
@@ -156,27 +159,8 @@ export const pizzariaDemo: Restaurant = {
         fr: "Notre pâte cuite au feu de bois, garnie de crème chocolat-noisette, de fraises fraîches et de sucre glace. À partager (ou pas).",
       },
       allergens: ["gluten", "leite"],
-      posterUrl: u("photo-1513104890138-7c749659a591"),
-    },
-    {
-      id: "tiramisu",
-      category: "sobremesas",
-      name: "Tiramisù",
-      price: 5,
-      short: {
-        pt: "Mascarpone, café expresso e cacau.",
-        en: "Mascarpone, espresso and cocoa.",
-        es: "Mascarpone, café expreso y cacao.",
-        fr: "Mascarpone, expresso et cacao.",
-      },
-      description: {
-        pt: "Feito na casa todos os dias: biscoitos embebidos em expresso, creme de mascarpone e cacau.",
-        en: "Made in-house daily: ladyfingers soaked in espresso, mascarpone cream and cocoa.",
-        es: "Hecho en casa cada día: bizcochos mojados en expreso, crema de mascarpone y cacao.",
-        fr: "Fait maison chaque jour : biscuits imbibés d'expresso, crème au mascarpone et cacao.",
-      },
-      allergens: ["gluten", "ovo", "leite"],
-      posterUrl: u("photo-1571877227200-a0d98ea607e9"),
+      videoUrl: "/videos/chocolate-morango.mp4",
+      posterUrl: "/posters/chocolate-morango.jpg",
     },
     {
       id: "coca-cola",
