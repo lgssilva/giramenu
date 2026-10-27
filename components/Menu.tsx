@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ui } from "@/lib/i18n";
+import { playMuted } from "@/lib/play";
 import { dishesIn, formatPrice, type Dish, type Restaurant } from "@/lib/menu";
 import { unitPrice } from "./Cart";
 import { AllergenChips } from "./AllergenChips";
@@ -366,7 +367,7 @@ function Thumb({ dish: d }: { dish: Dish }) {
     if (!video) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) video.play().catch(() => {});
+        if (entry.isIntersecting) playMuted(video);
         else video.pause();
       },
       { threshold: 0.4 },
