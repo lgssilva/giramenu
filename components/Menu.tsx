@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ui } from "@/lib/i18n";
 import { dishesIn, formatPrice, type Dish, type Restaurant } from "@/lib/menu";
 import { AllergenChips } from "./AllergenChips";
+import { BackToTop } from "./BackToTop";
 import { DishMedia } from "./DishMedia";
 import { ReviewButtons } from "./ReviewButtons";
 import { useLang } from "./LangProvider";
@@ -121,6 +122,7 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
 
         <EndOfMenu restaurant={r} />
       </main>
+      <BackToTop />
     </>
   );
 }
