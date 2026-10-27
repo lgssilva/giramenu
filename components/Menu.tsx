@@ -5,7 +5,8 @@ import { ui } from "@/lib/i18n";
 import { dishesIn, formatPrice, type Dish, type Restaurant } from "@/lib/menu";
 import { unitPrice } from "./Cart";
 import { AllergenChips } from "./AllergenChips";
-import { AddSmall, AddToOrder, CartBar, CartProvider, SizePicker } from "./Cart";
+import { AddSmall, AddToOrder, CartBar, CartProvider, SizePicker, useCart } from "./Cart";
+import { BackToTop } from "./BackToTop";
 import { DishMedia } from "./DishMedia";
 import { ReviewButtons } from "./ReviewButtons";
 import { useLang } from "./LangProvider";
@@ -140,9 +141,16 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
         <EndOfMenu restaurant={r} />
       </main>
       <CartBar />
+      <FloatingTop />
     </div>
     </CartProvider>
   );
+}
+
+/** Seta de voltar ao topo; sobe quando a barra "Ver pedido" está na tela. */
+function FloatingTop() {
+  const cart = useCart();
+  return <BackToTop raised={(cart?.count ?? 0) > 0} />;
 }
 
 /** Tamanho escolhido do item (o padrão do item, ou o primeiro). */
