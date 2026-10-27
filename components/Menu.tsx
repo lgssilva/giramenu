@@ -100,7 +100,7 @@ export function Menu({ restaurant: r }: { restaurant: Restaurant }) {
           aria-label={t(ui.categories)}
           className="sticky top-[calc(4.5rem+env(safe-area-inset-top))] z-40 mt-6 border-b border-hairline bg-surface/90 py-3.5 backdrop-blur-md"
         >
-          <div ref={chipsRef} className="no-scrollbar flex gap-2 overflow-x-auto px-4">
+          <div ref={chipsRef} className="no-scrollbar flex gap-2 overflow-x-auto px-4 [&>:first-child]:ml-auto [&>:last-child]:mr-auto">
             {r.categories.map((c) => {
               const isActive = c.id === active;
               return (

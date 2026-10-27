@@ -45,7 +45,7 @@ export const pizzariaDemo: Restaurant = {
   signatureDishId: "margherita",
   categories: [
     { id: "pizzas", name: { pt: "Pizzas", en: "Pizzas", es: "Pizzas", fr: "Pizzas" } },
-    { id: "sobremesas", name: { pt: "Sobremesas", en: "Desserts", es: "Postres", fr: "Desserts" } },
+    { id: "sobremesas", name: { pt: "Pizzas Doces", en: "Sweet Pizzas", es: "Pizzas Dulces", fr: "Pizzas Sucrées" } },
     { id: "bebidas", name: { pt: "Bebidas", en: "Drinks", es: "Bebidas", fr: "Boissons" }, compact: true },
   ],
   dishes: [
