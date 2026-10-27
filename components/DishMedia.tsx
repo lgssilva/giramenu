@@ -1,5 +1,6 @@
 "use client";
 
+import { playMuted } from "@/lib/play";
 import { useEffect, useRef } from "react";
 
 type Props = {
@@ -25,7 +26,7 @@ export function DishMedia({ videoUrl, posterUrl, alt, dimmed, priority, badge }:
     if (!video) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) video.play().catch(() => {});
+        if (entry.isIntersecting) playMuted(video);
         else video.pause();
       },
       { threshold: 0.4 },
