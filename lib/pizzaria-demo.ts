@@ -139,6 +139,26 @@ export const pizzariaDemo: Restaurant = {
       posterUrl: u("photo-1571997478779-2adcbbe9ab2f"),
     },
     {
+      id: "chocolate-morango",
+      category: "sobremesas",
+      name: "Pizza de Chocolate e Morango",
+      price: 11,
+      short: {
+        pt: "Creme de chocolate, morangos frescos e açúcar em pó.",
+        en: "Chocolate cream, fresh strawberries and icing sugar.",
+        es: "Crema de chocolate, fresas frescas y azúcar glas.",
+        fr: "Crème au chocolat, fraises fraîches et sucre glace.",
+      },
+      description: {
+        pt: "A nossa massa sai do forno a lenha e recebe uma camada generosa de creme de chocolate com avelã, morangos frescos fatiados e açúcar em pó. Para dividir (ou não).",
+        en: "Our wood-fired dough topped with a generous layer of chocolate hazelnut cream, fresh sliced strawberries and icing sugar. For sharing (or not).",
+        es: "Nuestra masa sale del horno de leña y se cubre con crema de chocolate y avellana, fresas frescas y azúcar glas. Para compartir (o no).",
+        fr: "Notre pâte cuite au feu de bois, garnie de crème chocolat-noisette, de fraises fraîches et de sucre glace. À partager (ou pas).",
+      },
+      allergens: ["gluten", "leite"],
+      posterUrl: u("photo-1513104890138-7c749659a591"),
+    },
+    {
       id: "tiramisu",
       category: "sobremesas",
       name: "Tiramisù",
