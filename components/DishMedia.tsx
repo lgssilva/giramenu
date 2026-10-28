@@ -71,7 +71,7 @@ export function DishMedia({ videoUrl, posterUrl, alt, dimmed, priority, badge }:
           muted
           loop
           playsInline
-          preload="metadata"
+          preload={priority ? "auto" : "none"}
           aria-label={alt}
         />
       ) : posterUrl && !failed ? (
