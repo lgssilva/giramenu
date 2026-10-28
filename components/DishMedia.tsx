@@ -22,13 +22,15 @@ export function DishMedia({ videoUrl, posterUrl, alt, dimmed, priority, badge }:
   const barRef = useRef<HTMLDivElement>(null);
   // Imagem provisória que não carregou vira um fundo neutro, sem ícone quebrado.
   const [failed, setFailed] = useState(false);
+  // iPhone bloqueou o vídeo: mostra o MP4 dentro de <img>, que o iOS anima mesmo assim.
+  const [asImg, setAsImg] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) playMuted(video);
+        if (entry.isIntersecting) playMuted(video, () => setAsImg(true));
         else video.pause();
       },
       { threshold: 0.4 },
@@ -57,10 +59,13 @@ export function DishMedia({ videoUrl, posterUrl, alt, dimmed, priority, badge }:
         dimmed ? "grayscale opacity-60" : ""
       }`}
     >
-      {videoUrl ? (
+      {videoUrl && asImg ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img className="h-full w-full object-cover" src={videoUrl} alt={alt} />
+      ) : videoUrl ? (
         <video
           ref={videoRef}
-          className="h-full w-full object-cover"
+          className="pointer-events-none h-full w-full object-cover"
           src={videoUrl}
           poster={posterUrl}
           muted
