@@ -291,12 +291,13 @@ function DishSheet({ dish: d, onClose }: { dish: Dish; onClose: () => void }) {
 /** Miniatura 4:5. Com vídeo, toca mudo em loop só quando está visível. */
 function Thumb({ dish: d }: { dish: Dish }) {
   const ref = useRef<HTMLVideoElement>(null);
+  const [asImg, setAsImg] = useState(false);
   useEffect(() => {
     const video = ref.current;
     if (!video) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) playMuted(video);
+        if (entry.isIntersecting) playMuted(video, () => setAsImg(true));
         else video.pause();
       },
       { threshold: 0.4 },
@@ -305,10 +306,11 @@ function Thumb({ dish: d }: { dish: Dish }) {
     return () => observer.disconnect();
   }, []);
 
-  const className = "aspect-[4/5] w-[76px] shrink-0 rounded-lg bg-surface-container object-cover";
-  if (!d.videoUrl) {
+  const className = "pointer-events-none aspect-[4/5] w-[76px] shrink-0 rounded-lg bg-surface-container object-cover";
+  if (!d.videoUrl || asImg) {
+    // Sem vídeo: poster. Vídeo bloqueado no iPhone: o MP4 dentro de <img> anima mesmo assim.
     // eslint-disable-next-line @next/next/no-img-element
-    return <img src={d.posterUrl} alt={d.name} loading="lazy" className={className} />;
+    return <img src={asImg ? d.videoUrl : d.posterUrl} alt={d.name} loading="lazy" className={className} />;
   }
   return (
     <video
