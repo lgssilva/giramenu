@@ -320,7 +320,7 @@ function Thumb({ dish: d }: { dish: Dish }) {
       muted
       loop
       playsInline
-      preload="metadata"
+      preload="none"
       aria-label={d.name}
       className={className}
     />
